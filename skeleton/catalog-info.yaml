@@ -1,0 +1,81 @@
+{%- set parentMajorVersion = values.identifier.split(".")[2] -%}
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.identifier }}
+  description: ${{ values.description }}
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - outputport
+spec:
+  type: outputport
+  lifecycle: experimental
+  owner: ${{ values.owner }}
+  system: ${{ values.parentRef }}
+  domain: ${{ values.domain }}
+  mesh:
+    name: ${{ values.name }}
+    fullyQualifiedName: ${{ values.domainName }} - ${{ values.parentRefName }} - version ${{ parentMajorVersion }} - ${{ values.name }}
+    description: ${{ values.description }}
+    kind: outputport
+    version: ${{ parentMajorVersion + ".0.0" }}
+    infrastructureTemplateId: ${{ values.infrastructureTemplateId }}
+    useCaseTemplateId: ${{ values.useCaseTemplateId }}
+    dependsOn: {% if values.dependsOn | length > 0 %}{% for i in values.dependsOn %}
+      - ${{ i }}{% endfor %}{% else %}[]{% endif %}
+    platform: GCP
+    technology: BigQuery
+    outputPortType: SQL
+    creationDate: ${{ values.creationDate }}
+    startDate: ${{ values.creationDate }}
+    dataContract:
+      schema: {% if values.schemaColumns | length > 0 %}
+      {%- for column in values.schemaColumns %}
+        - name: ${{ column.name }}
+          dataType: ${{ column.dataType }}
+      {%- if column.description %}
+          description: ${{ column.description }}
+      {%- endif %}
+      {%- if column.constraint %}
+          constraint: ${{ column.constraint }}
+      {%- endif %}
+      {%- if column.dataType in ["STRING", "BYTES"] and column.dataLength !== undefined %}
+          dataLength: ${{ column.dataLength }}
+      {%- endif %}
+      {%- if column.dataType in ["NUMERIC", "BIGNUMERIC"] and column.precision !== undefined %}
+          precision: ${{ column.precision }}
+      {%- endif %}
+      {%- if column.dataType in ["NUMERIC", "BIGNUMERIC"] and column.scale !== undefined %}
+          scale: ${{ column.scale }}
+      {%- endif %}
+      {%- if column.dataType in ["NUMERIC", "BIGNUMERIC"] and column.roundingMode %}
+          roundingMode: ${{ column.roundingMode }}
+      {%- endif %}
+          tags: []
+      {% endfor %}{% else %}[]{% endif %}
+      termsAndConditions: ${{ values.termsAndConditions }}
+      endpoint: ${{ values.endpoint }}
+      SLA:
+        intervalOfChange: ${{ values.intervalOfChange }}
+        timeliness: ${{ values.timeliness }}
+        upTime: ${{ values.upTime }}
+    dataSharingAgreement:
+      purpose: ${{ values.purpose }}
+      billing: ${{ values.billing }}
+      security: ${{ values.security }}
+      intendedUsage: ${{ values.intendedUsage }}
+      limitations: ${{ values.limitations }}
+      lifeCycle: ${{ values.lifeCycle }}
+      confidentiality: ${{ values.confidentiality }}
+    tags: []
+    sampleData: {}
+    semanticLinking: []
+    specific:
+      project: ${{ values.project }}
+      {%- if values.dataset %}
+      dataset: ${{ values.dataset }}
+      {%- endif %}
+      tableName: ${{ values.tableName }}
+      viewName: ${{ values.viewName }}

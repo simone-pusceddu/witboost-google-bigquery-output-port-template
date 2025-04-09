@@ -1,0 +1,8 @@
+{%- set parentMajorVersion = values.identifier.split(".")[2] -%}
+{%- set parentName = values.identifier.split(".")[1] | replace("-", "") -%}
+{%- set domainName = values.domain.split(":")[1] | replace("-", "") -%}
+specific:
+  {%- if not values.dataset %}
+  dataset: ${{ domainName }}_${{ parentName }}_v${{ parentMajorVersion }}_production
+  {%- endif %}
+  ownerRoles: []
