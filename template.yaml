@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: google-bigquery-outputport-template.1
-  title: Google BigQuery Output Port
+  name: google-bigquery-outputport-template-skeleton
+  title: Google BigQuery Output Port (Skeleton)
   description: Creates an Output Port on Google BigQuery
   tags:
     - output-port
@@ -267,7 +267,7 @@ spec:
           useCaseTemplateId: urn:dmb:utm:google-bigquery-outputport-template:0.0.0
           useCaseTemplateVersion: 0.0.0
           infrastructureTemplateId: urn:dmb:itm:google-bigquery-tech-adapter:0
-          destination: &destination 'gitlab.com?owner=AgileDMBSandbox%2F${{orgname}}%2Fmesh.repository%2F${{ parameters.domain | replace(r/domain:| |-/, "") }}%2F${{ parameters.parentRef.split(".")[1] | replace(r/ |-/g, "") }}&repo=${{ parameters.name.split(" ") | join("") | lower }}'
+          destination: &destination 'gitlab.com?owner=simone.pusceddu&repo=${{ parameters.name.split(" ") | join("") | lower }}'
 
     - id: publish
       name: Publish
